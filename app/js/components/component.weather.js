@@ -8,25 +8,49 @@ angular.module('weatherMood.components').component("weather", {
   templateUrl: '/views/weather.html',
 
   bindings: {
-    general: '<',
-    weather: '<',
+    data: '<',
     icon: '@',
-    query: '@'
+    query: '@',
+    color: '@',
+    error: '<'
   },
 
-  controller: function (WeatherService, $rootScope) {
+  controller: function (WeatherService, $rootScope, $mdToast) {
     'ngInject';
 
-    this.$rootScope = $rootScope;
+    this.$onInit = () => {
+      this.color = 'brown';
+      this.error = '';
+    }
 
     // Save the new recipe
     this.getWeather = (query) => {
+
+      $rootScope.loading = true;
+      this.error = false;
+
       WeatherService.get(query).then((data) => {
-        this.weather = data.weather[0];
-        this.general = data.main;
-        this.icon = `http://openweathermap.org/img/w/${this.weather.icon}.png`;
-        this.$rootScope.$emit('PLAY_EVENT', this.weather.main);
-      }).catch((err) => {});
+
+        this.data = data;
+        this.icon = data.icon;
+
+        $rootScope.$emit('PLAY_EVENT', data.weather[0].main);
+
+      }).catch((err) => {
+        this.error = true;
+        this.showToast(err);
+      }).finally(() => {
+        $rootScope.loading = false;
+      });
+    };
+
+    this.showToast = (message) => {
+      $mdToast.show(
+        $mdToast.simple()
+        .textContent(message)
+        .position('top right')
+        .hideDelay(3000)
+      );
     };
 
   }

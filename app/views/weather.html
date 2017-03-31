@@ -1,25 +1,19 @@
-<md-toolbar class="md-tall md-accent">
-  <div layout="row" layout-xs="column">
-    <h2 flex class="md-toolbar-tools">
-      <span>WeatherMood</span>
-    </h2>
-    <form ng-submit="$ctrl.getWeather($ctrl.query)">
-      <md-input-container>
-        <label>La météo de votre ville</label>
-        <input ng-model="$ctrl.query" />
-      </md-input-container>
-    </form>
-  </div>
-</md-toolbar>
-<md-content ng-if="$ctrl.weather" md-theme="docs-dark">
+<md-content flex layout-padding>
   <div>
     <div layout="row" layout-xs="column">
       <div flex="50">
+        <form ng-submit="$ctrl.getWeather($ctrl.query)">
+          <md-input-container>
+            <label>La météo de votre ville</label>
+            <input ng-model="$ctrl.query" />
+          </md-input-container>
+        </form>
       </div>
-      <div flex="50">
+      <div flex="50" ng-if="!$ctrl.error && $ctrl.idle && $ctrl.data">
         <img ng-src="{{$ctrl.icon}}" />
-        <div class="text-capitalize">{{$ctrl.weather.description}}</div>
-        <div>{{$ctrl.general.temp}} °C</div>
+        <div>{{$ctrl.data.name}}</div>
+        <div>{{$ctrl.data.weather[0].description}}</div>
+        <div>{{$ctrl.data.main.temp}} °C</div>
       </div>
     </div>
   </div>

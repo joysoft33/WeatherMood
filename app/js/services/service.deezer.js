@@ -14,6 +14,7 @@ angular.module('weatherMood.services').service('DeezerService',
     const CHANNEL_URL = 'http://localhost:8080/views/channel.html';
 
     this.init = function () {
+      $log.debug(LOGNS, 'initializing');
       DZ.init({
         appId: APP_ID,
         channelUrl: CHANNEL_URL,
@@ -26,10 +27,10 @@ angular.module('weatherMood.services').service('DeezerService',
 
       DZ.login((response) => {
         if (response.authResponse) {
-          console.log(LOGNS, 'logged');
+          $log.debug(LOGNS, 'logged');
           deferred.resolve(response.data);
         } else {
-          console.log(LOGNS, 'not logged');
+          $log.debug(LOGNS, 'not logged');
           deferred.reject(response.data);
         }
       }, {
@@ -43,7 +44,7 @@ angular.module('weatherMood.services').service('DeezerService',
       var deferred = $q.defer();
 
       DZ.api('/search?q=' + encodeURIComponent(key), (response) => {
-        console.log(LOGNS, 'search tracks', response.data);
+        $log.debug(LOGNS, 'search tracks', response.data);
         deferred.resolve(response.data);
       });
 
@@ -54,7 +55,7 @@ angular.module('weatherMood.services').service('DeezerService',
       var deferred = $q.defer();
 
       DZ.player.playTracks([trackId], 0, (response) => {
-        console.log(LOGNS, "track list", response.tracks);
+        $log.debug(LOGNS, "track list", response.tracks);
         deferred.resolve(response.tracks);
         DZ.player.play();
       });

@@ -10,6 +10,15 @@
 
 <body ng-app="weatherMoodApp" ng-cloak>
 
+  <md-toolbar class="md-accent">
+    <div layout="row" layout-xs="column">
+      <h2 flex class="md-toolbar-tools">
+        <span>WeatherMood</span>
+      </h2>
+      <md-progress-circular ng-disabled="!$rootScope.loading" class="md-hue-2 loader" md-diameter="40px"></md-progress-circular>
+    </div>
+  </md-toolbar>
+
   <weather></weather>
   <deezer></deezer>
 

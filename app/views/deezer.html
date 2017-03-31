@@ -1,0 +1,41 @@
+<div ng-if="$ctrl.playlist.length > 0">
+  <!--<div layout="row" layout-align="space-around none" layout-wrap>
+    <div flex="nogrow" style="width:250px;" ng-repeat="track in $ctrl.playlist">
+      <md-card>
+        <img ng-src="{{track.album.cover_medium}}" class="md-card-image" alt="{{track.rtist.name}}" />
+        <md-card-title>
+          <md-card-title-text>
+            <span class="md-headline">{{track.title}}</span>
+          </md-card-title-text>
+        </md-card-title>
+        <md-card-content>
+          <p><strong>{{track.artist.name}}</strong> : {{track.album.title}}</p>
+        </md-card-content>
+        <md-card-actions>
+          <md-button ng-click="$ctrl.playTrack(track.id)">Play</md-button>
+        </md-card-actions>
+      </md-card>
+    </div>
+  </div>-->
+  <md-content layout-padding>
+    <md-grid-list md-cols-gt-md="12" md-cols="3" md-cols-md="8" md-row-height-gt-md="1:1" md-row-height="4:3" md-gutter-gt-md="16px"
+      md-gutter-md="8px" md-gutter="4px">
+      <md-grid-tile ng-repeat="track in $ctrl.playlist">
+        <div>
+          <img ng-src="{{track.album.cover_medium}}" class="md-card-image" alt="{{track.rtist.name}}" />
+          <md-card-title>
+            <md-card-title-text>
+              <span class="md-headline">{{track.title}}</span>
+            </md-card-title-text>
+          </md-card-title>
+          <md-card-content>
+            <p><strong>{{track.artist.name}}</strong> : {{track.album.title}}</p>
+          </md-card-content>
+          <md-card-actions>
+            <md-button ng-click="$ctrl.playTrack(track.id)">Play</md-button>
+          </md-card-actions>
+        </div>
+      </md-grid-tile>
+    </md-grid-list>
+  </md-content>
+</div>

@@ -9,7 +9,7 @@
           </md-input-container>
         </form>
       </div>
-      <div flex="50" ng-if="!$ctrl.error && $ctrl.idle && $ctrl.data">
+      <div flex="50" ng-if="$ctrl.data">
         <img ng-src="{{$ctrl.icon}}" />
         <div>{{$ctrl.data.name}}</div>
         <div>{{$ctrl.data.weather[0].description}}</div>

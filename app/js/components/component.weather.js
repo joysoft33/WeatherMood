@@ -7,50 +7,43 @@ angular.module('weatherMood.components').component("weather", {
 
   templateUrl: '/views/weather.html',
 
+  require: {
+    parent: '^main'
+  },
+  
   bindings: {
     data: '<',
     icon: '@',
     query: '@',
-    color: '@',
-    error: '<'
+    color: '@'
   },
 
-  controller: function (WeatherService, $rootScope, $mdToast) {
+  controller: function (WeatherService) {
     'ngInject';
 
     this.$onInit = () => {
       this.color = 'brown';
-      this.error = '';
+      this.data = null;
     }
 
     // Save the new recipe
     this.getWeather = (query) => {
 
-      $rootScope.loading = true;
-      this.error = false;
+      this.parent.showLoader(true);
+      this.data = null;
 
       WeatherService.get(query).then((data) => {
 
         this.data = data;
         this.icon = data.icon;
 
-        $rootScope.$emit('PLAY_EVENT', data.weather[0].main);
+        this.parent.searchMusic(data.weather[0].main);
 
       }).catch((err) => {
-        this.error = true;
-        this.showToast(err);
+        this.parent.showToast(err);
       }).finally(() => {
-        $rootScope.loading = false;
+        this.parent.showLoader(false);
       });
-    };
-
-    this.showToast = (message) => {
-      $mdToast.show(
-        $mdToast.simple()
-        .textContent(message)
-        .position('top right')
-        .hideDelay(3000)
-      );
     };
 
   }

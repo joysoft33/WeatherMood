@@ -10,19 +10,7 @@
 
 <body ng-app="weatherMoodApp" ng-cloak>
 
-  <md-toolbar class="md-accent">
-    <div layout="row" layout-xs="column">
-      <h2 flex class="md-toolbar-tools">
-        <span>WeatherMood</span>
-      </h2>
-      <md-progress-circular ng-disabled="!$rootScope.loading" class="md-hue-2 loader" md-diameter="40px"></md-progress-circular>
-    </div>
-  </md-toolbar>
-
-  <weather></weather>
-  <deezer></deezer>
-
-  <div id="dz-root"></div>
+  <main></main>
 
   <!--<script src="node_modules/jquery/jquery.min.js"></script>-->
   <script src="node_modules/angular/angular.min.js"></script>
@@ -39,6 +27,7 @@
   <script src="js/services/service.deezer.js"></script>
   <script src="js/services/service.weather.js"></script>
   <script src="js/components/index.js"></script>
+  <script src="js/components/component.main.js"></script>
   <script src="js/components/component.deezer.js"></script>
   <script src="js/components/component.weather.js"></script>
 

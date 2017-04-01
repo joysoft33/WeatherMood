@@ -7,34 +7,39 @@ angular.module('weatherMood.components').component("deezer", {
 
   templateUrl: '/views/deezer.html',
 
+  require: {
+    parent: '^main'
+  },
+  
   bindings: {
     playlist: '<',
   },
 
-  controller: function (DeezerService, $rootScope) {
+  controller: function (DeezerService, $scope) {
     'ngInject';
 
-    $rootScope.$on('PLAY_EVENT', (event, description) => {
-      console.log('EVENT : ' + description);
-      this.playlistSearch(description);
-    });
-    
     this.$onInit = () => {
-      console.log('DINIT...');
       DeezerService.init();
-      console.log('DINIT done');
     };
+
+    $scope.$on('EVT_SEARCH', (evt, keyword) => {
+      this.playlistSearch(keyword);
+    });
 
     this.playlistSearch = (key) => {
       DeezerService.search(key).then((data) => {
         this.playlist = data;
-      }).catch((err) => {});
+      }).catch((err) => {
+        this.parent.showToast(err);
+      });
     };
 
     this.playTrack = (id) => {
       DeezerService.play(id).then((data) => {
         console.log(data);
-      }).catch((err) => {});
+      }).catch((err) => {
+        this.parent.showToast(err);
+      });
     };
   }
 

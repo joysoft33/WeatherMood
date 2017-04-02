@@ -12,14 +12,19 @@ angular.module('weatherMood.components').component("deezer", {
   },
   
   bindings: {
-    playlist: '<',
+    pauseButtonText: '<',
+    currentPlaylist: '<',
+    currentTrack: '<',
+    playlists: '<',
+    tracks: '<'
   },
 
   controller: function (DeezerService, $scope) {
     'ngInject';
 
     this.$onInit = () => {
-      DeezerService.init();
+      DeezerService.init(this.playNotification);
+      this.pauseButtonText = 'Pause';
     };
 
     $scope.$on('EVT_SEARCH', (evt, keyword) => {
@@ -27,20 +32,72 @@ angular.module('weatherMood.components').component("deezer", {
     });
 
     this.playlistSearch = (key) => {
-      DeezerService.search(key).then((data) => {
-        this.playlist = data;
+
+      this.currentPlaylist = null;
+      this.currentTrack = null;
+      this.playLists = null;
+      this.tracks = null;
+
+      DeezerService.playlistSearch(key).then((data) => {
+        this.playlists = data;
       }).catch((err) => {
         this.parent.showToast(err);
       });
     };
 
-    this.playTrack = (id) => {
-      DeezerService.play(id).then((data) => {
-        console.log(data);
+    this.playlistPlay = (playlist) => {
+      DeezerService.playlistPlay(playlist.id).then((data) => {
+        console.log('playing...');
+        this.currentPlaylist = playlist;
+        this.tracks = data;
       }).catch((err) => {
         this.parent.showToast(err);
       });
     };
+
+    this.trackPlay = (index) => {
+      if (this.currentPlaylist != null) {
+        DeezerService.playlistPlay(this.currentPlaylist.id, index).then((data) => {
+          console.log('playing...');
+        }).catch((err) => {
+          this.parent.showToast(err);
+        });
+      }
+    };
+
+    this.trackNext = () => {
+      DeezerService.trackNext();
+    };
+
+    this.trackPause = () => {
+      if (this.pauseButtonText == 'Pause') {
+        DeezerService.trackPause();
+      } else {
+        DeezerService.trackPlay();
+      }
+    };
+
+    this.playNotification = (data, event) => {
+      switch (event) {
+        case 'current_track':
+          console.log(`playing ${data.track.title}`);
+          this.currentTrack = data.track;
+          break;
+        case 'player_loaded':
+          console.log('player loaded');
+          break;
+        case 'player_paused':
+          this.pauseButtonText = 'Play';
+          break;
+        case 'player_play':
+          this.pauseButtonText = 'Pause';
+          break;
+        case 'tracklist_changed':
+          console.log('tracklist changed');
+          break;
+      }
+    };
+
   }
 
 });

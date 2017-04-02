@@ -13,7 +13,6 @@ angular.module('weatherMood.components').component("weather", {
   
   bindings: {
     data: '<',
-    icon: '@',
     query: '@',
     color: '@'
   },
@@ -35,7 +34,6 @@ angular.module('weatherMood.components').component("weather", {
       WeatherService.get(query).then((data) => {
 
         this.data = data;
-        this.icon = data.icon;
 
         this.parent.searchMusic(data.weather[0].main);
 

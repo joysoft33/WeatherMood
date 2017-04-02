@@ -10,16 +10,24 @@ angular.module('weatherMood.services').service('DeezerService',
 
     const LOGNS = 'DS ::';
     const APP_ID = '229702';
-    const APP_SECRET = '07a0e0d8a147a3b43ec6ed2a9dd62ddc';
     const CHANNEL_URL = 'http://localhost:8080/views/channel.html';
 
-    this.init = function () {
-      $log.debug(LOGNS, 'initializing');
+    this.init = function (callback) {
+
       DZ.init({
         appId: APP_ID,
         channelUrl: CHANNEL_URL,
-        player: {}
+        player: {
+        }
       });
+
+      DZ.Event.subscribe('player_loaded', callback);
+      DZ.Event.subscribe('current_track', callback);
+      DZ.Event.subscribe('player_paused', callback);
+      DZ.Event.subscribe('tracklist_changed', callback);
+      DZ.Event.subscribe('player_play', callback);
+
+      $log.debug(LOGNS, 'DZ initialized');
     };
 
     this.login = () => {
@@ -40,27 +48,45 @@ angular.module('weatherMood.services').service('DeezerService',
       return deferred.promise;
     };
 
-    this.search = (key) => {
+    this.playlistSearch = (key) => {
+
+      $log.debug(LOGNS, `DZ searching for ${key}`);
       var deferred = $q.defer();
 
-      DZ.api('/search?q=' + encodeURIComponent(key), (response) => {
-        $log.debug(LOGNS, 'search tracks', response.data);
-        deferred.resolve(response.data);
+      DZ.api('/search/playlist?q=' + encodeURIComponent(key), (response) => {
+        if (response.data) {
+          $log.debug(LOGNS, `${response.data.length} tracks received`);
+          deferred.resolve(response.data);
+        } else {
+          $log.debug(LOGNS, `tracks search error: ${response}`);
+          deferred.reject(response);
+        }
       });
 
       return deferred.promise;
     };
 
-    this.play = (trackId) => {
+    this.playlistPlay = (playlistId, index = 0) => {
       var deferred = $q.defer();
 
-      DZ.player.playTracks([trackId], 0, (response) => {
-        $log.debug(LOGNS, "track list", response.tracks);
+      DZ.player.playPlaylist(playlistId, index, (response) => {
         deferred.resolve(response.tracks);
         DZ.player.play();
       });
 
       return deferred.promise;
+    };
+
+    this.trackNext = () => {
+      DZ.player.next();
+    };
+
+    this.trackPlay = () => {
+      DZ.player.play();
+    };
+
+    this.trackPause = () => {
+      DZ.player.pause();
     };
 
   });

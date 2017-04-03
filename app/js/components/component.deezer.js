@@ -19,17 +19,13 @@ angular.module('weatherMood.components').component("deezer", {
     tracks: '<'
   },
 
-  controller: function (DeezerService, $scope) {
+  controller: function (DeezerService, $scope, PLAY_EVENTS) {
     'ngInject';
 
     this.$onInit = () => {
-      DeezerService.init(this.playNotification);
       this.pauseButtonText = 'Pause';
+      DeezerService.init();
     };
-
-    $scope.$on('EVT_SEARCH', (evt, keyword) => {
-      this.playlistSearch(keyword);
-    });
 
     this.playlistSearch = (key) => {
 
@@ -77,27 +73,22 @@ angular.module('weatherMood.components').component("deezer", {
       }
     };
 
-    this.playNotification = (data, event) => {
-      switch (event) {
-        case 'current_track':
-          console.log(`playing ${data.track.title}`);
-          this.currentTrack = data.track;
-          break;
-        case 'player_loaded':
-          console.log('player loaded');
-          break;
-        case 'player_paused':
-          this.pauseButtonText = 'Play';
-          break;
-        case 'player_play':
-          this.pauseButtonText = 'Pause';
-          break;
-        case 'tracklist_changed':
-          console.log('tracklist changed');
-          break;
-      }
-    };
+    $scope.$on(PLAY_EVENTS.search, (evt, keyword) => {
+      this.playlistSearch(keyword);
+    });
 
+    $scope.$on(PLAY_EVENTS.track, (evt, track) => {
+      console.log(`playing ${track.title}`);
+      this.currentTrack = track;
+    });
+
+    $scope.$on(PLAY_EVENTS.pause, () => {
+      this.pauseButtonText = 'Play';
+    });
+
+    $scope.$on(PLAY_EVENTS.play, () => {
+      this.pauseButtonText = 'Pause';
+    });
   }
 
 });

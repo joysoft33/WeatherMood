@@ -17,7 +17,7 @@ angular.module('weatherMood.components').component("weather", {
     color: '@'
   },
 
-  controller: function (WeatherService) {
+  controller: function (WeatherService, PLAY_EVENTS) {
     'ngInject';
 
     this.$onInit = () => {
@@ -35,7 +35,7 @@ angular.module('weatherMood.components').component("weather", {
 
         this.data = data;
 
-        this.parent.searchMusic(data.weather[0].main);
+        this.parent.broadcast(PLAY_EVENTS.search, data.weather[0].main);
 
       }).catch((err) => {
         this.parent.showToast(err);

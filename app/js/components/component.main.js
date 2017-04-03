@@ -14,9 +14,6 @@ angular.module('weatherMood.components').component("main", {
   controller: function ($scope, $mdToast) {
     'ngInject';
 
-    this.$onInit = () => {
-    };
-
     this.showLoader = (load) => {
       this.loading = load;
     };
@@ -30,10 +27,9 @@ angular.module('weatherMood.components').component("main", {
       );
     };
 
-    this.searchMusic = (keyword) => {
-      $scope.$broadcast('EVT_SEARCH', keyword);
+    this.broadcast = (event, ...args) => {
+      $scope.$broadcast(event, args);
     };
-
   }
 
 });

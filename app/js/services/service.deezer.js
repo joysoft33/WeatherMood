@@ -5,14 +5,22 @@
  */
 angular.module('weatherMood.services').service('DeezerService',
 
-  function ($http, $log, $q) {
+  function ($rootScope, $http, $log, $q, PLAY_EVENTS) {
     'ngInject';
 
     const LOGNS = 'DS ::';
     const APP_ID = '229702';
     const CHANNEL_URL = 'http://localhost:8080/views/channel.html';
 
-    this.init = function (callback) {
+    const EVENTS = [
+      'player_loaded',
+      'current_track',
+      'player_paused',
+      'tracklist_changed',
+      'player_play'
+    ];
+
+    this.init = function () {
 
       DZ.init({
         appId: APP_ID,
@@ -21,11 +29,9 @@ angular.module('weatherMood.services').service('DeezerService',
         }
       });
 
-      DZ.Event.subscribe('player_loaded', callback);
-      DZ.Event.subscribe('current_track', callback);
-      DZ.Event.subscribe('player_paused', callback);
-      DZ.Event.subscribe('tracklist_changed', callback);
-      DZ.Event.subscribe('player_play', callback);
+      for (let evt of EVENTS) {
+        DZ.Event.subscribe(evt, this.playerNotification);
+      }
 
       $log.debug(LOGNS, 'DZ initialized');
     };
@@ -87,6 +93,21 @@ angular.module('weatherMood.services').service('DeezerService',
 
     this.trackPause = () => {
       DZ.player.pause();
+    };
+
+    this.playerNotification = (data, event) => {
+      $log.debug(LOGNS, `notification ${event}`);
+      switch (event) {
+        case 'current_track':
+          $rootScope.$broadcast(PLAY_EVENTS.track, data.track);
+          break;
+        case 'player_paused':
+          $rootScope.$broadcast(PLAY_EVENTS.pause);
+          break;
+        case 'player_play':
+          $rootScope.$broadcast(PLAY_EVENTS.play);
+          break;
+      }
     };
 
   });

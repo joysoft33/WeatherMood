@@ -24,10 +24,17 @@ angular.module('weatherMood.components').component("deezer", {
 
     this.$onInit = () => {
       this.pauseButtonText = 'Pause';
+      this.parent.showLoader(true);
       DeezerService.init();
+      this.parent.showLoader(false);
     };
 
+    /**
+     * Search playlists correcponding to the given keywork
+     */
     this.playlistSearch = (key) => {
+
+      this.parent.showLoader(true);
 
       this.currentPlaylist = null;
       this.currentTrack = null;
@@ -38,29 +45,50 @@ angular.module('weatherMood.components').component("deezer", {
         this.playlists = data;
       }).catch((err) => {
         this.parent.showToast(err);
+      }).finally(() => {
+        this.parent.showLoader(false);
       });
     };
 
+    /**
+     * Start playing the requested playlist
+     */
     this.playlistPlay = (playlist) => {
+
+      this.parent.showLoader(true);
+
       DeezerService.playlistPlay(playlist.id).then((data) => {
         console.log('playing...');
         this.currentPlaylist = playlist;
         this.tracks = data;
       }).catch((err) => {
         this.parent.showToast(err);
+      }).finally(() => {
+        this.parent.showLoader(false);
       });
     };
 
+    /**
+     * Start playing the requested playlist's track
+     */
     this.trackPlay = (index) => {
       if (this.currentPlaylist != null) {
+
+        this.parent.showLoader(true);
+
         DeezerService.playlistPlay(this.currentPlaylist.id, index).then((data) => {
           console.log('playing...');
         }).catch((err) => {
           this.parent.showToast(err);
+        }).finally(() => {
+          this.parent.showLoader(false);
         });
       }
     };
 
+    /**
+     * Pilot the music player
+     */
     this.trackNext = () => {
       DeezerService.trackNext();
     };
@@ -73,6 +101,9 @@ angular.module('weatherMood.components').component("deezer", {
       }
     };
 
+    /**
+     * Process external notifications
+     */
     $scope.$on(PLAY_EVENTS.search, (evt, keyword) => {
       this.playlistSearch(keyword);
     });

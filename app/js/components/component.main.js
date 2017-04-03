@@ -18,6 +18,9 @@ angular.module('weatherMood.components').component("main", {
       this.loading = load;
     };
 
+    /**
+     * Display error message
+     */
     this.showToast = (message) => {
       $mdToast.show(
         $mdToast.simple()
@@ -27,6 +30,9 @@ angular.module('weatherMood.components').component("main", {
       );
     };
 
+    /**
+     * Relay the given message to the entiere scope
+     */
     this.broadcast = (event, ...args) => {
       $scope.$broadcast(event, args);
     };

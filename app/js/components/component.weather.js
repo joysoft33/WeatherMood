@@ -13,19 +13,19 @@ angular.module('weatherMood.components').component("weather", {
   
   bindings: {
     data: '<',
-    query: '@',
-    color: '@'
+    query: '@'
   },
 
   controller: function (WeatherService, PLAY_EVENTS) {
     'ngInject';
 
     this.$onInit = () => {
-      this.color = 'brown';
       this.data = null;
     }
 
-    // Save the new recipe
+    /**
+     * Get current weather for the supplied city
+     */
     this.getWeather = (query) => {
 
       this.parent.showLoader(true);
@@ -35,6 +35,7 @@ angular.module('weatherMood.components').component("weather", {
 
         this.data = data;
 
+        // Let parent component relay the information
         this.parent.broadcast(PLAY_EVENTS.search, data.weather[0].main);
 
       }).catch((err) => {

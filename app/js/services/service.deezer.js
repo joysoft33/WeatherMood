@@ -20,6 +20,9 @@ angular.module('weatherMood.services').service('DeezerService',
       'player_play'
     ];
 
+    /**
+     * Initialize the DZ SDK and subscribe to the needed player events
+     */
     this.init = function () {
 
       DZ.init({
@@ -36,6 +39,9 @@ angular.module('weatherMood.services').service('DeezerService',
       $log.debug(LOGNS, 'DZ initialized');
     };
 
+    /**
+     * Log to the DZ service (not used for the moment)
+     */
     this.login = () => {
       var deferred = $q.defer();
 
@@ -54,6 +60,9 @@ angular.module('weatherMood.services').service('DeezerService',
       return deferred.promise;
     };
 
+    /**
+     * Search for playlists correcponding to the given keyword
+     */
     this.playlistSearch = (key) => {
 
       $log.debug(LOGNS, `DZ searching for ${key}`);
@@ -72,6 +81,9 @@ angular.module('weatherMood.services').service('DeezerService',
       return deferred.promise;
     };
 
+    /**
+     * Select and play the requested playlist
+     */
     this.playlistPlay = (playlistId, index = 0) => {
       var deferred = $q.defer();
 
@@ -83,6 +95,9 @@ angular.module('weatherMood.services').service('DeezerService',
       return deferred.promise;
     };
 
+    /**
+     * DZ player commands
+     */
     this.trackNext = () => {
       DZ.player.next();
     };
@@ -95,8 +110,13 @@ angular.module('weatherMood.services').service('DeezerService',
       DZ.player.pause();
     };
 
+    /**
+     * Receive DZ player notifications
+     */
     this.playerNotification = (data, event) => {
+
       $log.debug(LOGNS, `notification ${event}`);
+      
       switch (event) {
         case 'current_track':
           $rootScope.$broadcast(PLAY_EVENTS.track, data.track);

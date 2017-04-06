@@ -1,6 +1,6 @@
 # Sample application to study Angular & Material
 
-This simple application that plays music according to a city weather.
+A simple application that plays music according to a city weather.
 
 - first wait for a city name
 - retrieve the current city weather using the OpenWheatherMap API

@@ -1,0 +1,26 @@
+<div id=tracks class="header" layout="column" flex layout-fill>
+  <!--<md-content class="player" flex ng-show="$ctrl.tracks.length">-->
+    <section>
+      <md-subheader class="md-primary">
+        <span>{{$ctrl.currentTrack.artist.name}}</span>
+        <span>{{$ctrl.currentTrack.album.title}}</span>
+        <span>{{$ctrl.currentTrack.title}}</span>
+        <md-button class="md-raised" ng-click="$ctrl.cancel()">Annuler</md-button>
+        <md-button class="md-raised" ng-click="$ctrl.trackNext()">Suivant</md-button>
+        <md-button class="md-raised" ng-click="$ctrl.trackPause()">{{$ctrl.pauseButtonText}}</md-button>
+      </md-subheader>
+      <md-list layout="column" layout-padding>
+        <md-list-item class="md-1-line" ng-repeat="track in $ctrl.tracks track by track.id">
+          <div class="md-list-item-text" layout="row" layout-align="start center" ng-class="{selected: $ctrl.currentTrack && ($ctrl.currentTrack.id == track.id)}"
+            ng-mouseenter="show=true" ng-mouseleave="show=false">
+            <span flex>{{track.artist.name}}</span>
+            <span flex>{{track.album.title}}</span>
+            <span flex>{{track.title}}</span>
+            <md-button ng-class="{hidden: !show || ($ctrl.currentTrack && $ctrl.currentTrack.id == track.id)}" ng-click="$ctrl.trackPlay($index)">Play</md-button>
+          </div>
+          <md-divider ng-if="!$last"></md-divider>
+        </md-list-item>
+      </md-list>
+    </section>
+  <!--</md-content>-->
+</div>

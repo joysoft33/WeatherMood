@@ -1,0 +1,24 @@
+<md-content layout-padding>
+  <div layout-gt-xs="row" layout="column">
+    <div flex-gt-xs="50" flex>
+      <form ng-submit="$ctrl.getWeather($ctrl.query)">
+        <md-input-container>
+          <label>La météo de votre ville</label>
+          <input ng-model="$ctrl.query" />
+        </md-input-container>
+      </form>
+    </div>
+    <div flex-gt-xs="50" flex>
+      <div layout="row">
+        <div flex="30" ng-if="$ctrl.data">
+          <img ng-src="{{$ctrl.data.icon}}" />
+        </div>
+        <div flex="70" ng-if="$ctrl.data">
+          <div>{{$ctrl.data.name}}</div>
+          <div>{{$ctrl.data.weather[0].description}}</div>
+          <div>{{$ctrl.data.main.temp}} °C</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</md-content>

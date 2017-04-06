@@ -9,5 +9,9 @@ angular.module('weatherMoodApp')
     search: 'search',
     track: 'track',
     pause: 'pause',
-    play: 'play'
+    play: 'play',
+    stop: 'stop'
+  })
+  .constant('WEATHER_EVENTS', {
+    meteo: 'meteo'
   });

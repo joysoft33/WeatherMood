@@ -5,23 +5,18 @@
  */
 angular.module('weatherMood.components').component("weather", {
 
-  templateUrl: '/views/weather.html',
+  templateUrl: '/js/components/weather/weather.html',
 
   require: {
     parent: '^main'
   },
   
   bindings: {
-    data: '<',
-    query: '@'
+    data: '<'
   },
 
-  controller: function (WeatherService, PLAY_EVENTS) {
+  controller: function (WeatherService, $scope, WEATHER_EVENTS) {
     'ngInject';
-
-    this.$onInit = () => {
-      this.data = null;
-    }
 
     /**
      * Get current weather for the supplied city
@@ -29,14 +24,13 @@ angular.module('weatherMood.components').component("weather", {
     this.getWeather = (query) => {
 
       this.parent.showLoader(true);
-      this.data = null;
 
       WeatherService.get(query).then((data) => {
 
         this.data = data;
 
-        // Let parent component relay the information
-        this.parent.broadcast(PLAY_EVENTS.search, data.weather[0].main);
+        // Dispatch message on the parent scope
+        $scope.$emit(WEATHER_EVENTS.meteo, data.weather[0].main);
 
       }).catch((err) => {
         this.parent.showToast(err);

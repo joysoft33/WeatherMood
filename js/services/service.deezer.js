@@ -5,12 +5,12 @@
  */
 angular.module('weatherMood.services').service('DeezerService',
 
-  function ($rootScope, $http, $log, $q, PLAY_EVENTS) {
+  function ($timeout, $rootScope, $http, $log, $q, PLAY_EVENTS) {
     'ngInject';
 
-    const LOGNS = 'DS ::';
+    const CHANNEL_URL = 'http://localhost:8080/channel.html';
     const APP_ID = '229702';
-    const CHANNEL_URL = 'http://localhost:8080/views/channel.html';
+    const LOGNS = 'DS ::';
 
     const EVENTS = [
       'player_loaded',
@@ -20,6 +20,8 @@ angular.module('weatherMood.services').service('DeezerService',
       'player_play'
     ];
 
+    this.loaded = false;
+
     /**
      * Initialize the DZ SDK and subscribe to the needed player events
      */
@@ -28,8 +30,7 @@ angular.module('weatherMood.services').service('DeezerService',
       DZ.init({
         appId: APP_ID,
         channelUrl: CHANNEL_URL,
-        player: {
-        }
+        player: true
       });
 
       for (let evt of EVENTS) {
@@ -61,22 +62,34 @@ angular.module('weatherMood.services').service('DeezerService',
     };
 
     /**
-     * Search for playlists correcponding to the given keyword
+     * Search for playlists corresponding to the given keyword
      */
     this.playlistSearch = (key) => {
 
-      $log.debug(LOGNS, `DZ searching for ${key}`);
+      $log.debug(LOGNS, `Searching for playlist with ${key}`);
       var deferred = $q.defer();
 
-      DZ.api('/search/playlist?q=' + encodeURIComponent(key), (response) => {
-        if (response.data) {
-          $log.debug(LOGNS, `${response.data.length} tracks received`);
-          deferred.resolve(response.data);
-        } else {
-          $log.debug(LOGNS, `tracks search error: ${response}`);
-          deferred.reject(response);
-        }
-      });
+      var listSearch = () => {
+        DZ.api('/search/playlist?q=' + encodeURIComponent(key), (response) => {
+          if (response.data) {
+            $log.debug(LOGNS, `${response.data.length} playlists received`);
+            deferred.resolve(response.data);
+          } else {
+            var message = response.error ? response.error.message: 'error';
+            $log.debug(LOGNS, `Playlist search error: ${message}`);
+            deferred.reject(message);
+          }
+        });
+      };
+      
+      if (this.loaded) {
+        listSearch();
+      } else {
+        DZ.Event.subscribe('player_loaded', () => {
+          listSearch();
+        },
+        true);
+      }
 
       return deferred.promise;
     };
@@ -85,12 +98,32 @@ angular.module('weatherMood.services').service('DeezerService',
      * Select and play the requested playlist
      */
     this.playlistPlay = (playlistId, index = 0) => {
+
+      $log.debug(LOGNS, `Playing playlist ${playlistId} / ${index}`);
+      var id = Number(playlistId);
       var deferred = $q.defer();
 
-      DZ.player.playPlaylist(playlistId, index, (response) => {
-        deferred.resolve(response.tracks);
-        DZ.player.play();
-      });
+      var listPlay = () => {
+        DZ.player.playPlaylist(id, index, (response) => {
+          if (response.tracks) {
+            deferred.resolve(response.tracks);
+            DZ.player.play();
+          } else {
+            var message = response.error ? response.error.message: 'error';
+            $log.debug(LOGNS, `Playlist play error: ${message}`);
+            deferred.reject(message);
+          }
+        });
+      };
+
+      if (this.loaded) {
+        listPlay();
+      } else {
+        DZ.Event.subscribe('player_loaded', () => {
+          listPlay();
+        },
+        true);
+      }
 
       return deferred.promise;
     };
@@ -116,7 +149,7 @@ angular.module('weatherMood.services').service('DeezerService',
     this.playerNotification = (data, event) => {
 
       $log.debug(LOGNS, `notification ${event}`);
-      
+
       switch (event) {
         case 'current_track':
           $rootScope.$broadcast(PLAY_EVENTS.track, data.track);
@@ -126,6 +159,9 @@ angular.module('weatherMood.services').service('DeezerService',
           break;
         case 'player_play':
           $rootScope.$broadcast(PLAY_EVENTS.play);
+          break;
+        case 'player_loaded':
+          this.loaded = true;
           break;
       }
     };

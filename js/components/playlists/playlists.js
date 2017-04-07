@@ -7,11 +7,9 @@ angular.module('weatherMood.components').component("playlists", {
 
   templateUrl: '/js/components/playlists/playlists.html',
 
-  require: {
-    parent: '^main'
-  },
-  
   bindings: {
+    showToast: '&',
+    showLoader: '&',
     playlists: '<'
   },
 

@@ -7,15 +7,14 @@ angular.module('weatherMood.components').component("weather", {
 
   templateUrl: '/js/components/weather/weather.html',
 
-  require: {
-    parent: '^main'
-  },
-  
   bindings: {
+    showToast: '&',
+    showLoader: '&',
+    getMusic: '&',
     data: '<'
   },
 
-  controller: function (WeatherService, $scope, WEATHER_EVENTS) {
+  controller: function (WeatherService, $scope) {
     'ngInject';
 
     /**
@@ -23,19 +22,20 @@ angular.module('weatherMood.components').component("weather", {
      */
     this.getWeather = (query) => {
 
-      this.parent.showLoader(true);
+      this.showLoader({show: true});
 
       WeatherService.get(query).then((data) => {
 
+        // Save meteo data for the requested city
         this.data = data;
 
-        // Dispatch message on the parent scope
-        $scope.$emit(WEATHER_EVENTS.meteo, data.weather[0].main);
+        // Request music playlists based on this weather
+        this.getMusic({key: data.weather[0].main});
 
       }).catch((err) => {
-        this.parent.showToast(err);
+        this.showToast({message: err});
       }).finally(() => {
-        this.parent.showLoader(false);
+        this.showLoader({show: false});
       });
     };
 

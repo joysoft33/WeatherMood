@@ -7,12 +7,10 @@ angular.module('weatherMood.components').component("tracks", {
 
   templateUrl: '/js/components/tracks/tracks.html',
 
-  require: {
-    parent: '^main'
-  },
-  
   bindings: {
-    pauseButtonText: '<',
+    showToast: '&',
+    showLoader: '&',
+    pause: '<',
     currentTrack: '<',
     playlistId: '<',
     tracks: '<'
@@ -22,7 +20,7 @@ angular.module('weatherMood.components').component("tracks", {
     'ngInject';
 
     this.$onInit = () => {
-      this.pauseButtonText = 'Pause';
+      this.pause = false;
       this.playlistId = $stateParams.id;
     };
 
@@ -36,14 +34,14 @@ angular.module('weatherMood.components').component("tracks", {
      */
     this.trackPlay = (index) => {
 
-      this.parent.showLoader(true);
+      this.showLoader({show: true});
 
       DeezerService.playlistPlay(this.playlistId, index).then((data) => {
         console.log('playing...');
       }).catch((err) => {
-        this.parent.showToast(err);
+        this.showToast({message: err});
       }).finally(() => {
-        this.parent.showLoader(false);
+        this.showLoader({show: false});
       });
     };
 
@@ -55,10 +53,10 @@ angular.module('weatherMood.components').component("tracks", {
     };
 
     this.trackPause = () => {
-      if (this.pauseButtonText == 'Pause') {
-        DeezerService.trackPause();
-      } else {
+      if (this.pause) {
         DeezerService.trackPlay();
+      } else {
+        DeezerService.trackPause();
       }
     };
 
@@ -71,11 +69,11 @@ angular.module('weatherMood.components').component("tracks", {
     });
 
     $scope.$on(PLAY_EVENTS.pause, () => {
-      this.pauseButtonText = 'Play';
+      this.pause = true;
     });
 
     $scope.$on(PLAY_EVENTS.play, () => {
-      this.pauseButtonText = 'Pause';
+      this.pause = false;
     });
   }
 

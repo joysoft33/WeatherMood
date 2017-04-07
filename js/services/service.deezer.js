@@ -75,20 +75,20 @@ angular.module('weatherMood.services').service('DeezerService',
             $log.debug(LOGNS, `${response.data.length} playlists received`);
             deferred.resolve(response.data);
           } else {
-            var message = response.error ? response.error.message: 'error';
+            var message = response.error ? response.error.message : 'error';
             $log.debug(LOGNS, `Playlist search error: ${message}`);
             deferred.reject(message);
           }
         });
       };
-      
+
       if (this.loaded) {
         listSearch();
       } else {
         DZ.Event.subscribe('player_loaded', () => {
-          listSearch();
-        },
-        true);
+            listSearch();
+          },
+          true);
       }
 
       return deferred.promise;
@@ -109,7 +109,7 @@ angular.module('weatherMood.services').service('DeezerService',
             deferred.resolve(response.tracks);
             DZ.player.play();
           } else {
-            var message = response.error ? response.error.message: 'error';
+            var message = response.error ? response.error.message : 'error';
             $log.debug(LOGNS, `Playlist play error: ${message}`);
             deferred.reject(message);
           }
@@ -120,9 +120,9 @@ angular.module('weatherMood.services').service('DeezerService',
         listPlay();
       } else {
         DZ.Event.subscribe('player_loaded', () => {
-          listPlay();
-        },
-        true);
+            listPlay();
+          },
+          true);
       }
 
       return deferred.promise;

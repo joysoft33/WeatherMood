@@ -1,14 +1,26 @@
 <div id='wrapper'>
+  
   <md-toolbar md-scroll-shrink>
     <div class="md-toolbar-tools">
       <a href="/">WeatherMood</a>
       <md-progress-circular ng-disabled="!$ctrl.loading" class="md-hue-1 loader" md-diameter="40px"></md-progress-circular>
     </div>
   </md-toolbar>
+  
   <md-content id="content">
+  
     <md-subheader class="md-primary">
-      <weather></weather>
+      <weather 
+        get-music="$ctrl.getMusic(key)" 
+        show-toast="$ctrl.showToast(message)" 
+        show-loader="$ctrl.showLoader(show)">
+      </weather>
     </md-subheader>
-    <ui-view></ui-view>
+
+    <ui-view 
+      showToast="$ctrl.showToast(message)"
+      showLoader="$ctrl.showLoader(show)">
+    </ui-view>
+  
   </md-content>
 </div>

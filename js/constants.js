@@ -11,7 +11,4 @@ angular.module('weatherMoodApp')
     pause: 'pause',
     play: 'play',
     stop: 'stop'
-  })
-  .constant('WEATHER_EVENTS', {
-    meteo: 'meteo'
   });

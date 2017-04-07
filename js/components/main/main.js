@@ -11,11 +11,11 @@ angular.module('weatherMood.components').component("main", {
     loading: '<'
   },
 
-  controller: function (DeezerService, $scope, $state, $mdToast, WEATHER_EVENTS, PLAY_EVENTS) {
+  controller: function (DeezerService, $scope, $state, $mdToast, PLAY_EVENTS) {
     'ngInject';
 
-    this.showLoader = (load) => {
-      this.loading = load;
+    this.showLoader = (show) => {
+      this.loading = show;
     };
 
     /**
@@ -33,9 +33,9 @@ angular.module('weatherMood.components').component("main", {
     /**
      * Activate playlists view when meteo has changed
      */
-    $scope.$on(WEATHER_EVENTS.meteo, (event, key) => {
+    this.getMusic = (key) => {
       $state.go('playlists', { key: key }, { reload: true });
-    });
+    };
 
     /**
      * Track play cancelled, return to home page

@@ -1,0 +1,76 @@
+@font-face {
+  font-family: 'Roboto';
+  src: url('/assets/fonts/roboto/Roboto-Regular.woff') format('woff')
+}
+
+html,
+body {
+  font-family: 'Roboto', sans-serif;
+  font-size: 16px;
+}
+
+#dz-root {
+  width: 400px;
+  height: 200px;
+}
+
+#wrapper {
+  height: 100vh;
+  overflow: hidden;
+}
+
+#wrapper .loader {
+  right: 10px;
+  position: absolute;
+}
+
+#wrapper>#content {
+  height: 100%;
+}
+
+#wrapper>#content>.md-subheader {
+  border-bottom: 1px solid rgba(0, 0, 0, .1);
+  box-shadow: 1px 1px 10px #333;
+  margin-bottom: 20px;
+}
+
+#tracks .play-menu {
+  position: absolute;
+  right: 0;
+  top: -20px;
+}
+#tracks .md-subheader {
+  min-height: 70px;
+}
+#tracks .md-subheader .md-subheader-inner {
+  font-weight: bold;
+  padding: 20px;
+}
+#tracks .md-list-item-text.selected>* {
+  font-weight: bold;
+}
+#tracks button.hidden {
+  visibility: hidden;
+}
+
+#playlists {
+  padding-bottom: 10px;
+}
+
+#playlists .playlist {
+  width: 250px;
+}
+
+#playlists .playlist md-card-title {
+  text-transform: lowercase;
+  padding: 24px 16px 0px;
+}
+
+#playlists .playlist md-card-title span::first-letter {
+  text-transform: uppercase;
+}
+
+#playlists .md-headline {
+  font-size: 1.3em;
+  line-height: 1.2em;
+}

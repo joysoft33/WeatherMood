@@ -107,7 +107,6 @@ angular.module('weatherMood.services').service('DeezerService',
         DZ.player.playPlaylist(id, index, (response) => {
           if (response.tracks) {
             deferred.resolve(response.tracks);
-            DZ.player.play();
           } else {
             var message = response.error ? response.error.message : 'error';
             $log.debug(LOGNS, `Playlist play error: ${message}`);

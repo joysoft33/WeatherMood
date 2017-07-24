@@ -13,7 +13,7 @@ angular.module('weatherMood.components').component("playlists", {
     playlists: '<'
   },
 
-  controller: function (DeezerService, $scope, PLAY_EVENTS) {
+  controller: function () {
     'ngInject';
 
     this.$onInit = () => {

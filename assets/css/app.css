@@ -44,7 +44,7 @@ body {
 }
 #tracks .md-subheader .md-subheader-inner {
   font-weight: bold;
-  padding: 20px;
+  padding: 40px 20px;
 }
 #tracks .md-list-item-text.selected>* {
   font-weight: bold;

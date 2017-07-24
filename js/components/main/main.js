@@ -7,10 +7,6 @@ angular.module('weatherMood.components').component("main", {
 
   templateUrl: '/js/components/main/main.html',
 
-  bindings: {
-    loading: '<'
-  },
-
   controller: function (DeezerService, $scope, $state, $mdToast, PLAY_EVENTS) {
     'ngInject';
 

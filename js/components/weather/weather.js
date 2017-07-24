@@ -10,8 +10,7 @@ angular.module('weatherMood.components').component("weather", {
   bindings: {
     showToast: '&',
     showLoader: '&',
-    getMusic: '&',
-    data: '<'
+    getMusic: '&'
   },
 
   controller: function (WeatherService, $scope) {

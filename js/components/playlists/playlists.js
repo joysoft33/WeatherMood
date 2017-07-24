@@ -17,7 +17,11 @@ angular.module('weatherMood.components').component("playlists", {
     'ngInject';
 
     this.$onInit = () => {
-      console.log(this.playLists);
+      console.log('Playlists initialized');
+    };
+
+    this.$onChanges = (event) => {
+      console.log('Playlists loaded');
     };
   }
 

@@ -10,9 +10,6 @@ angular.module('weatherMood.components').component("tracks", {
   bindings: {
     showToast: '&',
     showLoader: '&',
-    pause: '<',
-    currentTrack: '<',
-    playlistId: '<',
     tracks: '<'
   },
 
@@ -22,6 +19,14 @@ angular.module('weatherMood.components').component("tracks", {
     this.$onInit = () => {
       this.pause = false;
       this.playlistId = $stateParams.id;
+      console.log('Tracks initialized');
+    };
+
+    this.$onChanges = (event) => {
+      if (event.tracks) {
+        this.currentTrack = this.tracks[0];
+      }
+      console.log('Tracks loaded');
     };
 
     this.cancel = () => {
@@ -64,7 +69,6 @@ angular.module('weatherMood.components').component("tracks", {
      * Process external notifications
      */
     $scope.$on(PLAY_EVENTS.track, (evt, track) => {
-      console.log(`playing ${track.title}`);
       this.currentTrack = track;
     });
 
